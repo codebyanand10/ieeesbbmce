@@ -14,8 +14,8 @@ export default function Navbar() {
     const navLinks = [
         { href: "/", label: "Home" },
         { href: "/events", label: "Events" },
-        { href: "/about", label: "About" },
-        { href: "/execom", label: "Execom" },
+        { href: "/execom", label: "Execoms" },
+        { href: "/about", label: "About Us" },
         { href: "/contact", label: "Contact Us" },
     ];
 
@@ -37,7 +37,7 @@ export default function Navbar() {
                 </button>
 
                 <ul className="desktop-menu">
-                    {navLinks.slice().reverse().map((link) => (
+                    {navLinks.map((link) => (
                         <li key={link.href} className="menu-item">
                             <Link
                                 href={link.href}
