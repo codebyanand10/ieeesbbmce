@@ -1,7 +1,0 @@
-import "clsx";
-function _page($$renderer) {
-  $$renderer.push(`<div class="main svelte-1bv7ezn"><h1 class="contact-head svelte-1bv7ezn">Contact Us</h1> <div class="contact-grid svelte-1bv7ezn"><iframe class="contact-map svelte-1bv7ezn" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.2360355484693!2d76.64193477496325!3d9.042221088781966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b060f577c89be5d%3A0x35569068c93e9f50!2sBaselios%20Mathews%20II%20College%20of%20Engineering%2C%20Kerala!5e0!3m2!1sen!2sin!4v1754808610405!5m2!1sen!2sin" referrerpolicy="no-referrer-when-downgrade" title="Map"></iframe> <div class="contact-details svelte-1bv7ezn"><p class="svelte-1bv7ezn"><b class="svelte-1bv7ezn">Address</b><br class="svelte-1bv7ezn"/> <br class="svelte-1bv7ezn"/> IEEE Student Branch<br class="svelte-1bv7ezn"/> Baselios Mathews II College of Engineering<br class="svelte-1bv7ezn"/> Lake View, Muthupilakadu<br class="svelte-1bv7ezn"/> Sasthamcotta, Kollam<br class="svelte-1bv7ezn"/> Kerala, India - 690 520<br class="svelte-1bv7ezn"/> <br class="svelte-1bv7ezn"/> <b class="svelte-1bv7ezn">email:</b> <a href="mailto:ieeesbbmce@gmail.com" class="svelte-1bv7ezn">ieeesbbmce@gmail.com</a><br class="svelte-1bv7ezn"/> <br class="svelte-1bv7ezn"/> <b class="svelte-1bv7ezn">Instagram:</b> <a href="https://www.instagram.com/ieeesbbmce" class="svelte-1bv7ezn">@ieeesbbmce</a></p></div></div></div>`);
-}
-export {
-  _page as default
-};
