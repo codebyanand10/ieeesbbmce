@@ -1,86 +1,47 @@
-import { createClient } from "@libsql/client/web";
+import { createClient } from "@supabase/supabase-js";
 import { env } from "$env/dynamic/private";
 
-const FALLBACK_URL = "libsql://database-uwulanparty.aws-ap-south-1.turso.io";
-const FALLBACK_TOKEN = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3NzAxMjE5MjksImlkIjoiMjQ1NTlkYjItZjQ2OS00ZTI4LTk4Y2YtMGMwYmExYzEyYzc2IiwicmlkIjoiMDE1ZmZkNGUtOWIzYS00ZDRiLWE4NjUtNjFlY2QwZjBkM2VmIn0.7J5R5HJz_nW8qjblyrlo74mcygctZ8ISfUXyKCifKBL60kgMVt8-R3CcsWf5HqM3HkTYFw7gCL6Iu7kfEcQjDw";
+const FALLBACK_URL = "https://qepfbsvxwtlxanzlvbeb.supabase.co";
+const FALLBACK_KEY = "sb_publishable_ZU3-_yHxJeBJ0gv5jWjrfg_s2ZX8fB1";
 
-function cleanUrl(val) {
-    if (!val || typeof val !== "string") return FALLBACK_URL;
-    let s = val.trim();
-    if (s.includes("=")) {
-        s = s.substring(s.indexOf("=") + 1).trim();
-    }
-    s = s.replace(/^["']|["']$/g, "").trim();
-    if (!s.startsWith("libsql://") && !s.startsWith("https://") && !s.startsWith("http://")) {
-        return FALLBACK_URL;
-    }
-    return s;
-}
-
-function cleanToken(val) {
-    if (!val || typeof val !== "string") return FALLBACK_TOKEN;
-    let s = val.trim();
-    if (s.includes("=")) {
-        s = s.substring(s.indexOf("=") + 1).trim();
-    }
-    s = s.replace(/^["']|["']$/g, "").trim();
-    if (s.length < 20) {
-        return FALLBACK_TOKEN;
-    }
-    return s;
-}
-
-function getClient() {
-    const rawUrl =
-        env.TURSO_DATABASE_URL ||
-        env.TURSO_URL ||
-        env.STORAGE_URL ||
-        env.STORAGE_DATABASE_URL ||
-        env.VITE_TURSO_DATABASE_URL ||
+function getCredentials() {
+    const supabaseUrl =
+        env.PUBLIC_SUPABASE_URL ||
+        env.NEXT_PUBLIC_SUPABASE_URL ||
+        env.SUPABASE_URL ||
         (typeof process !== "undefined"
-            ? process.env?.TURSO_DATABASE_URL ||
-              process.env?.TURSO_URL ||
-              process.env?.STORAGE_URL ||
-              process.env?.STORAGE_DATABASE_URL ||
-              process.env?.VITE_TURSO_DATABASE_URL
+            ? process.env?.PUBLIC_SUPABASE_URL ||
+              process.env?.NEXT_PUBLIC_SUPABASE_URL ||
+              process.env?.SUPABASE_URL
             : "") ||
-        (typeof import.meta !== "undefined" && import.meta.env?.VITE_TURSO_DATABASE_URL ? import.meta.env.VITE_TURSO_DATABASE_URL : "") ||
+        (typeof import.meta !== "undefined" && import.meta.env?.PUBLIC_SUPABASE_URL
+            ? import.meta.env.PUBLIC_SUPABASE_URL
+            : "") ||
         FALLBACK_URL;
 
-    const rawToken =
-        env.TURSO_AUTH_TOKEN ||
-        env.TURSO_GROUP_AUTH_TOKEN ||
-        env.STORAGE_AUTH_TOKEN ||
-        env.STORAGE_GROUP_AUTH_TOKEN ||
-        env.VITE_TURSO_AUTH_TOKEN ||
+    const supabaseKey =
+        env.PUBLIC_SUPABASE_ANON_KEY ||
+        env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+        env.SUPABASE_ANON_KEY ||
+        env.SUPABASE_SERVICE_ROLE_KEY ||
         (typeof process !== "undefined"
-            ? process.env?.TURSO_AUTH_TOKEN ||
-              process.env?.TURSO_GROUP_AUTH_TOKEN ||
-              process.env?.STORAGE_AUTH_TOKEN ||
-              process.env?.STORAGE_GROUP_AUTH_TOKEN ||
-              process.env?.VITE_TURSO_AUTH_TOKEN
+            ? process.env?.PUBLIC_SUPABASE_ANON_KEY ||
+              process.env?.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+              process.env?.SUPABASE_ANON_KEY ||
+              process.env?.SUPABASE_SERVICE_ROLE_KEY
             : "") ||
-        (typeof import.meta !== "undefined" && import.meta.env?.VITE_TURSO_AUTH_TOKEN ? import.meta.env.VITE_TURSO_AUTH_TOKEN : "") ||
-        FALLBACK_TOKEN;
+        (typeof import.meta !== "undefined" && import.meta.env?.PUBLIC_SUPABASE_ANON_KEY
+            ? import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+            : "") ||
+        FALLBACK_KEY;
 
-    const url = cleanUrl(rawUrl);
-    const authToken = cleanToken(rawToken);
-
-    return createClient({
-        url,
-        authToken,
-    });
+    return {
+        supabaseUrl: supabaseUrl.trim() || FALLBACK_URL,
+        supabaseKey: supabaseKey.trim() || FALLBACK_KEY,
+    };
 }
 
-const db = {
-    /**
-     * @param {import('@libsql/client/web').InStatement} stmt
-     */
-    execute: (stmt) => getClient().execute(stmt),
-    /**
-     * @param {import('@libsql/client/web').InStatement[]} stmts
-     */
-    batch: (stmts) => getClient().batch(stmts),
-};
+const { supabaseUrl, supabaseKey } = getCredentials();
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export default db;
+export default supabase;

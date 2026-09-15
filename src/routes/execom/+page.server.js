@@ -1,17 +1,16 @@
-import db from "$lib/db";
+import supabase from "$lib/db";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
     try {
-        const facultyRes = await db.execute("SELECT * from faculty_execom");
-        const studentRes = await db.execute("SELECT * from student_execom");
-        
-        const faculty_execom = facultyRes.rows.map(r => ({ ...r }));
-        const student_execom = studentRes.rows.map(r => ({ ...r }));
+        const [facultyRes, studentRes] = await Promise.all([
+            supabase.from("faculty_execom").select("*").order("id", { ascending: true }),
+            supabase.from("student_execom").select("*").order("id", { ascending: true }),
+        ]);
 
         return {
-            faculty_execom,
-            student_execom,
+            faculty_execom: facultyRes.data || [],
+            student_execom: studentRes.data || [],
         };
     } catch (err) {
         console.error("Error loading execom:", err);

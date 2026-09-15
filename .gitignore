@@ -6,3 +6,4 @@ dist
 .env
 .env.*
 !.env.example
+turso_backup.*

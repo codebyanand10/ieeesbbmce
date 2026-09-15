@@ -1,18 +1,20 @@
-import db from "$lib/db";
+import supabase from "$lib/db";
 import sharp from "sharp";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-    const events = (await db.execute("SELECT * from events")).rows.reverse();
-    const admin = (await db.execute("SELECT * from admin")).rows;
-    const faculty_execom = (await db.execute("SELECT * from faculty_execom")).rows;
-    const student_execom = (await db.execute("SELECT * from student_execom")).rows;
+    const [eventsRes, adminRes, facultyRes, studentRes] = await Promise.all([
+        supabase.from("events").select("*").order("id", { ascending: false }),
+        supabase.from("admin").select("*"),
+        supabase.from("faculty_execom").select("*").order("id", { ascending: true }),
+        supabase.from("student_execom").select("*").order("id", { ascending: true }),
+    ]);
 
     return {
-        events,
-        admin,
-        faculty_execom,
-        student_execom,
+        events: eventsRes.data || [],
+        admin: adminRes.data || [],
+        faculty_execom: facultyRes.data || [],
+        student_execom: studentRes.data || [],
     };
 }
 
@@ -20,12 +22,16 @@ export async function load() {
 export const actions = {
     login: async ({ request }) => {
         const formData = await request.formData();
-        const username = formData.get('username')?.toString();
-        const password = formData.get('password')?.toString();
+        const username = formData.get("username")?.toString();
+        const password = formData.get("password")?.toString();
 
-        const admin = (await db.execute("SELECT * from admin")).rows;
+        const { data: admin } = await supabase
+            .from("admin")
+            .select("*")
+            .eq("username", username)
+            .eq("password", password);
 
-        if (admin.length > 0 && admin[0].username === username && admin[0].password === password) {
+        if (admin && admin.length > 0) {
             return { auth: true };
         } else {
             return { auth: false };
@@ -34,204 +40,160 @@ export const actions = {
 
     add_event: async ({ request }) => {
         const formData = await request.formData();
-        const name = formData.get('event-name')?.toString() || "";
-        const description = formData.get('event-description')?.toString() || "";
-        const date = formData.get('event-date')?.toString() || "";
-        const venue = formData.get('event-venue')?.toString() || "";
-        const reglink = formData.get('event-reglink')?.toString() || "";
-        const status = Number(formData.get('event-status')) || 0;
+        const name = formData.get("event-name")?.toString() || "";
+        const description = formData.get("event-description")?.toString() || "";
+        const date = formData.get("event-date")?.toString() || "";
+        const venue = formData.get("event-venue")?.toString() || "";
+        const reglink = formData.get("event-reglink")?.toString() || "";
+        const status = Number(formData.get("event-status")) || 0;
 
-        const img = formData.get('event-img');
+        /** @type {{ name: string, description: string, date: string, venue: string, reglink: string, status: number, image?: string }} */
+        const eventData = { name, description, date, venue, reglink, status };
+
+        const img = formData.get("event-img");
         if (img instanceof File && img.size > 0) {
             const imgbuff = Buffer.from(await img.arrayBuffer());
-            const imgout = (await sharp(imgbuff)
-                .webp()
-                .toBuffer()).toString('base64');
-
-            await db.execute({
-                sql: "INSERT INTO events(name, description, date, venue, reglink, status, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                args: [name, description, date, venue, reglink, status, imgout],
-            });
-        } else {
-            await db.execute({
-                sql: "INSERT INTO events(name, description, date, venue, reglink, status) VALUES (?, ?, ?, ?, ?, ?)",
-                args: [name, description, date, venue, reglink, status],
-            });
+            const imgout = (await sharp(imgbuff).webp().toBuffer()).toString("base64");
+            eventData.image = imgout;
         }
 
+        await supabase.from("events").insert(eventData);
         return { auth: true };
     },
 
     update_event: async ({ request }) => {
         const formData = await request.formData();
-        const id = Number(formData.get('id'));
-        const name = formData.get('event-name')?.toString() || "";
-        const description = formData.get('event-description')?.toString() || "";
-        const date = formData.get('event-date')?.toString() || "";
-        const venue = formData.get('event-venue')?.toString() || "";
-        const reglink = formData.get('event-reglink')?.toString() || "";
-        const status = Number(formData.get('event-status')) || 0;
+        const id = Number(formData.get("id"));
+        const name = formData.get("event-name")?.toString() || "";
+        const description = formData.get("event-description")?.toString() || "";
+        const date = formData.get("event-date")?.toString() || "";
+        const venue = formData.get("event-venue")?.toString() || "";
+        const reglink = formData.get("event-reglink")?.toString() || "";
+        const status = Number(formData.get("event-status")) || 0;
 
-        const img = formData.get('event-img');
+        /** @type {{ name: string, description: string, date: string, venue: string, reglink: string, status: number, image?: string }} */
+        const eventData = { name, description, date, venue, reglink, status };
+
+        const img = formData.get("event-img");
         if (img instanceof File && img.size > 0) {
             const imgbuff = Buffer.from(await img.arrayBuffer());
-            const imgout = (await sharp(imgbuff)
-                .webp()
-                .toBuffer()).toString('base64');
-            await db.execute({
-                sql: "UPDATE events SET name=?, description=?, date=?, venue=?, reglink=?, status=?, image=? WHERE id=?",
-                args: [name, description, date, venue, reglink, status, imgout, id],
-            });
-        } else {
-            await db.execute({
-                sql: "UPDATE events SET name=?, description=?, date=?, venue=?, reglink=?, status=? WHERE id=?",
-                args: [name, description, date, venue, reglink, status, id],
-            });
+            const imgout = (await sharp(imgbuff).webp().toBuffer()).toString("base64");
+            eventData.image = imgout;
         }
+
+        await supabase.from("events").update(eventData).eq("id", id);
         return { auth: true };
     },
 
     remove_event: async ({ request }) => {
         const formData = await request.formData();
-        const id = Number(formData.get('id'));
+        const id = Number(formData.get("id"));
 
-        await db.execute({
-            sql: "DELETE FROM events WHERE id = ?",
-            args: [id],
-        });
-
+        await supabase.from("events").delete().eq("id", id);
         return { success: true, auth: true };
     },
 
     add_fac_execom: async ({ request }) => {
         const formData = await request.formData();
-        const name = formData.get('name')?.toString() || "";
-        const role = formData.get('role')?.toString() || "";
+        const name = formData.get("name")?.toString() || "";
+        const role = formData.get("role")?.toString() || "";
 
-        const img = formData.get('image');
+        /** @type {{ name: string, role: string, image?: string }} */
+        const facData = { name, role };
+
+        const img = formData.get("image");
         if (img instanceof File && img.size > 0) {
             const imgbuff = Buffer.from(await img.arrayBuffer());
-            const imgout = (await sharp(imgbuff)
-                .webp()
-                .toBuffer()).toString('base64');
-            await db.execute({
-                sql: "INSERT INTO faculty_execom(name, role, image) VALUES (?, ?, ?)",
-                args: [name, role, imgout],
-            });
-        } else {
-            await db.execute({
-                sql: "INSERT INTO faculty_execom(name, role) VALUES (?, ?)",
-                args: [name, role],
-            });
+            const imgout = (await sharp(imgbuff).webp().toBuffer()).toString("base64");
+            facData.image = imgout;
         }
+
+        await supabase.from("faculty_execom").insert(facData);
         return { auth: true };
     },
 
     update_fac_execom: async ({ request }) => {
         const formData = await request.formData();
-        const id = Number(formData.get('id'));
-        const name = formData.get('name')?.toString() || "";
-        const role = formData.get('role')?.toString() || "";
+        const id = Number(formData.get("id"));
+        const name = formData.get("name")?.toString() || "";
+        const role = formData.get("role")?.toString() || "";
 
-        const img = formData.get('image');
+        /** @type {{ name: string, role: string, image?: string }} */
+        const facData = { name, role };
+
+        const img = formData.get("image");
         if (img instanceof File && img.size > 0) {
             const imgbuff = Buffer.from(await img.arrayBuffer());
-            const imgout = (await sharp(imgbuff)
-                .webp()
-                .toBuffer()).toString('base64');
-            await db.execute({
-                sql: "UPDATE faculty_execom SET name=?, role=?, image=? WHERE id=?",
-                args: [name, role, imgout, id],
-            });
-        } else {
-            await db.execute({
-                sql: "UPDATE faculty_execom SET name=?, role=? WHERE id=?",
-                args: [name, role, id],
-            });
+            const imgout = (await sharp(imgbuff).webp().toBuffer()).toString("base64");
+            facData.image = imgout;
         }
+
+        await supabase.from("faculty_execom").update(facData).eq("id", id);
         return { auth: true };
     },
 
     remove_fac_execom: async ({ request }) => {
         const formData = await request.formData();
-        const id = Number(formData.get('id'));
+        const id = Number(formData.get("id"));
 
-        await db.execute({
-            sql: "DELETE FROM faculty_execom WHERE id = ?",
-            args: [id],
-        });
-
+        await supabase.from("faculty_execom").delete().eq("id", id);
         return { success: true, auth: true };
     },
 
     add_std_execom: async ({ request }) => {
         const formData = await request.formData();
-        const name = formData.get('name')?.toString() || "";
-        const role = formData.get('role')?.toString() || "";
-        const instagram = formData.get('instagram')?.toString() || null;
-        const github = formData.get('github')?.toString() || null;
-        const linkedin = formData.get('linkedin')?.toString() || null;
-        const email = formData.get('email')?.toString() || null;
-        const phone = formData.get('phone')?.toString() || null;
+        const name = formData.get("name")?.toString() || "";
+        const role = formData.get("role")?.toString() || "";
+        const instagram = formData.get("instagram")?.toString() || null;
+        const github = formData.get("github")?.toString() || null;
+        const linkedin = formData.get("linkedin")?.toString() || null;
+        const email = formData.get("email")?.toString() || null;
+        const phone = formData.get("phone")?.toString() || null;
 
-        const img = formData.get('image');
+        /** @type {{ name: string, role: string, instagram: string|null, github: string|null, linkedin: string|null, email: string|null, phone: string|null, image?: string }} */
+        const studentData = { name, role, instagram, github, linkedin, email, phone };
+
+        const img = formData.get("image");
         if (img instanceof File && img.size > 0) {
             const imgbuff = Buffer.from(await img.arrayBuffer());
-            const imgout = (await sharp(imgbuff)
-                .webp()
-                .toBuffer()).toString('base64');
-            await db.execute({
-                sql: "INSERT INTO student_execom(name, role, instagram, github, linkedin, email, phone, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                args: [name, role, instagram, github, linkedin, email, phone, imgout],
-            });
-        } else {
-            await db.execute({
-                sql: "INSERT INTO student_execom(name, role, instagram, github, linkedin, email, phone) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                args: [name, role, instagram, github, linkedin, email, phone],
-            });
+            const imgout = (await sharp(imgbuff).webp().toBuffer()).toString("base64");
+            studentData.image = imgout;
         }
+
+        await supabase.from("student_execom").insert(studentData);
         return { auth: true };
     },
 
     update_std_execom: async ({ request }) => {
         const formData = await request.formData();
-        const id = Number(formData.get('id'));
-        const name = formData.get('name')?.toString() || "";
-        const role = formData.get('role')?.toString() || "";
-        const instagram = formData.get('instagram')?.toString() || null;
-        const github = formData.get('github')?.toString() || null;
-        const linkedin = formData.get('linkedin')?.toString() || null;
-        const email = formData.get('email')?.toString() || null;
-        const phone = formData.get('phone')?.toString() || null;
+        const id = Number(formData.get("id"));
+        const name = formData.get("name")?.toString() || "";
+        const role = formData.get("role")?.toString() || "";
+        const instagram = formData.get("instagram")?.toString() || null;
+        const github = formData.get("github")?.toString() || null;
+        const linkedin = formData.get("linkedin")?.toString() || null;
+        const email = formData.get("email")?.toString() || null;
+        const phone = formData.get("phone")?.toString() || null;
 
-        const img = formData.get('image');
+        /** @type {{ name: string, role: string, instagram: string|null, github: string|null, linkedin: string|null, email: string|null, phone: string|null, image?: string }} */
+        const studentData = { name, role, instagram, github, linkedin, email, phone };
+
+        const img = formData.get("image");
         if (img instanceof File && img.size > 0) {
             const imgbuff = Buffer.from(await img.arrayBuffer());
-            const imgout = (await sharp(imgbuff)
-                .webp()
-                .toBuffer()).toString('base64');
-            await db.execute({
-                sql: "UPDATE student_execom SET name=?, role=?, instagram=?, github=?, linkedin=?, email=?, phone=?, image=? WHERE id=?",
-                args: [name, role, instagram, github, linkedin, email, phone, imgout, id],
-            });
-        } else {
-            await db.execute({
-                sql: "UPDATE student_execom SET name=?, role=?, instagram=?, github=?, linkedin=?, email=?, phone=? WHERE id=?",
-                args: [name, role, instagram, github, linkedin, email, phone, id],
-            });
+            const imgout = (await sharp(imgbuff).webp().toBuffer()).toString("base64");
+            studentData.image = imgout;
         }
+
+        await supabase.from("student_execom").update(studentData).eq("id", id);
         return { auth: true };
     },
 
     remove_std_execom: async ({ request }) => {
         const formData = await request.formData();
-        const id = Number(formData.get('id'));
+        const id = Number(formData.get("id"));
 
-        await db.execute({
-            sql: "DELETE FROM student_execom WHERE id = ?",
-            args: [id],
-        });
-
+        await supabase.from("student_execom").delete().eq("id", id);
         return { success: true, auth: true };
     },
 };
