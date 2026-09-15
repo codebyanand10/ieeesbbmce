@@ -4,16 +4,21 @@
 
 import event_poster_placeholder from "$lib/assets/event-posters/placehold.webp";
 import avatar_placeholder from "$lib/assets/avatar.webp";
-let { data, form, img_src, img_src2,  tab_index } = $props();
+let { data, form } = $props();
+let tab_index = $state(0);
+let img_src = $state("");
+let img_src2 = $state("");
 
 function update_event_image(event) {
     img_src = URL.createObjectURL(event.target.files[0]);
 }
 
-tab_index=0;
+function update_student_image(event) {
+    img_src2 = URL.createObjectURL(event.target.files[0]);
+}
 
 function change_tab(i) {
-    tab_index=i;
+    tab_index = i;
 }
 
 </script>
@@ -140,7 +145,7 @@ function change_tab(i) {
                     <input type="text" class="faculty-name-textbox" name="linkedin" placeholder="LinkedIn (e.g. anand)">
                     <input type="email" class="faculty-name-textbox" name="email" placeholder="Email (e.g. anandanil107@gmail.com)">
                     <input type="tel" class="faculty-name-textbox" name="phone" placeholder="Phone Number (e.g. 7994980107)">
-                    <input type="file" class="faculty-img-picker" id="student-img-picker" name="image" accept="image/*" onchange={update_event_image}>
+                    <input type="file" class="faculty-img-picker" id="student-img-picker" name="image" accept="image/*" onchange={update_student_image}>
                     <button class="event-add-button" type="submit">Add</button>
                 </form>
                 {#each data.student_execom as student}
@@ -200,13 +205,13 @@ function change_tab(i) {
     100% { background-size: 100% 100%; }
     }
 
-    @property -- gradient-transition-pre {
+    @property --gradient-transition-pre {
     syntax: '<color>';
     initial-value: #00000055;
     inherits: false;
     }
 
-    @property -- gradient-transition-post {
+    @property --gradient-transition-post {
     syntax: '<color>';
     initial-value: #00000055;
     inherits: false;

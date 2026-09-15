@@ -1,7 +1,7 @@
 <script>
 
 
-let { children, navbar_open } = $props();
+let { children } = $props();
 import black_logo from "$lib/assets/ieeesbbmce-logo.svg"
 import ieee_logo from "$lib/assets/IEEE-logo.svg"
 import sep_icon from "$lib/assets/sep.svg"
@@ -39,7 +39,7 @@ onDestroy(() => {
     if (vantaEffect) vantaEffect.destroy();
 });
 
-navbar_open=false;
+let navbar_open = $state(false);
 
 function open_nav() {
     navbar_open = !navbar_open;

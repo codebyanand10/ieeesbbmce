@@ -1,5 +1,4 @@
-<script>''
-
+<script>
 let event_poster_dir = "src/lib/assets/event-posters/";
 let { data } = $props();
 
@@ -76,13 +75,13 @@ function get_event_status(value) {
     100% { background-size: 100% 100%; }
 }
 
-@property -- gradient-transition-pre {
+@property --gradient-transition-pre {
     syntax: '<color>';
     initial-value: #00000055;
     inherits: false;
 }
 
-@property -- gradient-transition-post {
+@property --gradient-transition-post {
     syntax: '<color>';
     initial-value: #00000055;
     inherits: false;

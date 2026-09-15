@@ -93,13 +93,13 @@ $: elements = [grid1, grid2, grid3];
     100% { background-size: 100% 100%; }
 }
 
-@property -- gradient-transition-pre {
+@property --gradient-transition-pre {
     syntax: '<color>';
     initial-value: #00000055;
     inherits: false;
 }
 
-@property -- gradient-transition-post {
+@property --gradient-transition-post {
     syntax: '<color>';
     initial-value: #00000055;
     inherits: false;
