@@ -27,34 +27,11 @@
         return `https://www.instagram.com/${cleanHandle}`;
     }
 
-    function getInstagramDisplay(handle) {
-        if (!handle) return "";
-        try {
-            if (handle.includes("instagram.com/")) {
-                const path = handle.split("instagram.com/")[1]?.split("?")[0]?.replace(/\/$/, "");
-                if (path) return `@${path}`;
-            }
-        } catch (e) {}
-        const clean = handle.replace(/^@/, "").trim();
-        return clean.startsWith("@") ? clean : `@${clean}`;
-    }
-
     function getGithubUrl(handle) {
         if (!handle) return "#";
         if (handle.startsWith("http://") || handle.startsWith("https://")) return handle;
         const cleanHandle = handle.replace(/^@/, "").trim();
         return `https://github.com/${cleanHandle}`;
-    }
-
-    function getGithubDisplay(handle) {
-        if (!handle) return "";
-        try {
-            if (handle.includes("github.com/")) {
-                const path = handle.split("github.com/")[1]?.split("?")[0]?.replace(/\/$/, "");
-                if (path) return path;
-            }
-        } catch (e) {}
-        return handle.replace(/^@/, "").trim();
     }
 
     function getLinkedinUrl(handle) {
@@ -64,26 +41,9 @@
         return `https://www.linkedin.com/in/${cleanHandle}`;
     }
 
-    function getLinkedinDisplay(handle) {
-        if (!handle) return "";
-        try {
-            if (handle.includes("linkedin.com/in/")) {
-                const path = handle.split("linkedin.com/in/")[1]?.split("?")[0]?.replace(/\/$/, "");
-                if (path) return path;
-            }
-        } catch (e) {}
-        return handle.trim();
-    }
-
     function getEmailUrl(email) {
         if (!email) return "#";
         return `mailto:${email.trim()}`;
-    }
-
-    function getPhoneUrl(phone) {
-        if (!phone) return "#";
-        const cleanPhone = phone.replace(/[^0-9+]/g, "");
-        return `tel:${cleanPhone}`;
     }
 </script>
 
@@ -113,6 +73,10 @@
                     <div class="faculty-role">{faculty.role}</div>
                     <div class="card-action-hint">
                         <span>View Details</span>
+                        <svg class="hint-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
                     </div>
                 </div>
             {/each}
@@ -211,8 +175,7 @@
                                     </svg>
                                 </div>
                                 <div class="tile-info">
-                                    <span class="tile-label">Instagram</span>
-                                    <span class="tile-value">{getInstagramDisplay(selectedMember.instagram)}</span>
+                                    <span class="tile-title">Instagram</span>
                                 </div>
                                 <span class="tile-arrow">↗</span>
                             </a>
@@ -232,8 +195,7 @@
                                     </svg>
                                 </div>
                                 <div class="tile-info">
-                                    <span class="tile-label">LinkedIn</span>
-                                    <span class="tile-value">{getLinkedinDisplay(selectedMember.linkedin)}</span>
+                                    <span class="tile-title">LinkedIn</span>
                                 </div>
                                 <span class="tile-arrow">↗</span>
                             </a>
@@ -253,8 +215,7 @@
                                     </svg>
                                 </div>
                                 <div class="tile-info">
-                                    <span class="tile-label">GitHub</span>
-                                    <span class="tile-value">{getGithubDisplay(selectedMember.github)}</span>
+                                    <span class="tile-title">GitHub</span>
                                 </div>
                                 <span class="tile-arrow">↗</span>
                             </a>
@@ -280,27 +241,8 @@
                             </a>
                         {/if}
 
-                        <!-- Phone -->
-                        {#if selectedMember.phone}
-                            <a
-                                href="{getPhoneUrl(selectedMember.phone)}"
-                                class="contact-tile phone-tile"
-                            >
-                                <div class="tile-icon phone-icon">
-                                    <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-                                        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                                    </svg>
-                                </div>
-                                <div class="tile-info">
-                                    <span class="tile-label">Phone</span>
-                                    <span class="tile-value">{selectedMember.phone}</span>
-                                </div>
-                                <span class="tile-arrow">↗</span>
-                            </a>
-                        {/if}
-
                         <!-- No Socials Notice -->
-                        {#if !selectedMember.instagram && !selectedMember.github && !selectedMember.linkedin && !selectedMember.email && !selectedMember.phone}
+                        {#if !selectedMember.instagram && !selectedMember.github && !selectedMember.linkedin && !selectedMember.email}
                             <div class="empty-contact-box">
                                 <p>Executive Committee Member</p>
                                 <span>IEEE Student Branch BMCE</span>
@@ -705,20 +647,18 @@
     box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
 }
 
-.phone-icon {
-    background: linear-gradient(135deg, #059669, #10b981);
-    color: white;
-}
-.phone-tile:hover {
-    border-color: #10b981;
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
-}
-
 .tile-info {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     min-width: 0;
+}
+
+.tile-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: 0.3px;
 }
 
 .tile-label {
