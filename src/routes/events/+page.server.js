@@ -4,7 +4,7 @@ import db from "$lib/db";
 export async function load() {
     try {
         const result = await db.execute("SELECT * FROM events");
-        const events = [...result.rows].reverse();
+        const events = result.rows.map(r => ({ ...r })).reverse();
         return {
             events,
             event_count: events.length
