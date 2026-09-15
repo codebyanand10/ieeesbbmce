@@ -8,6 +8,7 @@ import amithaImg from "../ieee/amitha.png";
 import mishalImg from "../ieee/mishal.png";
 import anandImg from "../ieee/anand.png";
 import roshiniImg from "../ieee/roshini.png";
+import reneeshImg from "../ieee/reneesh.png";
 
 export const execomMembers = [
     {
@@ -99,6 +100,16 @@ export const execomMembers = [
         github: "https://github.com/FATHIMA-ROSHINI",
         linkedin: "https://www.linkedin.com/in/fathima-roshini-siyad-8477292b3",
         email: "roshni.m.k.s20@gmail.com",
+    },
+    {
+        id: "10",
+        name: "Reneesh Rajesh",
+        role: "Project and Technical Coordinator",
+        image: reneeshImg,
+        instagram: "https://www.instagram.com/re._.nesh?stkn=MTFzdXRiNWlpZzZieA==",
+        github: "https://github.com/renesh-42",
+        linkedin: "https://www.linkedin.com/in/renesh-rajesh-b853a8280",
+        email: "reneshrajesh487@gmail.com",
     },
 ];
 
