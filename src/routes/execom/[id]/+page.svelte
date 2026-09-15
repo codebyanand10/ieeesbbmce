@@ -38,12 +38,11 @@
 
 <div class="page-container">
     <div class="top-bar">
-        <a href="/execom" class="back-btn">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <a href="/execom" class="back-btn" aria-label="Back to Execom" title="Back to Execom">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            Back to Execom
         </a>
     </div>
 
@@ -189,25 +188,26 @@
     .back-btn {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
         background: rgba(1, 38, 127, 0.5);
         border: 1.5px solid rgba(255, 255, 255, 0.25);
-        border-radius: 9999px;
+        border-radius: 50%;
         color: #ffffff;
-        font-size: 14px;
-        font-weight: 600;
-        font-family: 'Open Sans', sans-serif;
         cursor: pointer;
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
     }
 
     .back-btn:hover {
-        background: rgba(1, 38, 127, 0.85);
+        background: rgba(1, 38, 127, 0.9);
         border-color: #6366f1;
-        box-shadow: 0 0 18px rgba(99, 102, 241, 0.45);
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.55);
+        transform: scale(1.08);
     }
 
     .back-btn svg {
