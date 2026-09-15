@@ -3,28 +3,13 @@
     import { goto } from "$app/navigation";
 
     let { data } = $props();
-    let student = $derived(data.student);
-
-    function handleBackgroundClick() {
-        goto("/execom");
-    }
+    let member = $derived(data.member || data.student);
 
     function getInstagramUrl(handle) {
         if (!handle) return "#";
         if (handle.startsWith("http://") || handle.startsWith("https://")) return handle;
         const cleanHandle = handle.replace(/^@/, "").trim();
         return `https://www.instagram.com/${cleanHandle}`;
-    }
-
-    function getInstagramDisplay(handle) {
-        if (!handle) return "";
-        try {
-            if (handle.includes("instagram.com/")) {
-                const path = handle.split("instagram.com/")[1]?.split("?")[0]?.replace(/\/$/, "");
-                if (path) return path;
-            }
-        } catch (e) {}
-        return handle.replace(/^@/, "").trim();
     }
 
     function getGithubUrl(handle) {
@@ -34,17 +19,6 @@
         return `https://github.com/${cleanHandle}`;
     }
 
-    function getGithubDisplay(handle) {
-        if (!handle) return "";
-        try {
-            if (handle.includes("github.com/")) {
-                const path = handle.split("github.com/")[1]?.split("?")[0]?.replace(/\/$/, "");
-                if (path) return path;
-            }
-        } catch (e) {}
-        return handle.replace(/^@/, "").trim();
-    }
-
     function getLinkedinUrl(handle) {
         if (!handle) return "#";
         if (handle.startsWith("http://") || handle.startsWith("https://")) return handle;
@@ -52,58 +26,42 @@
         return `https://www.linkedin.com/in/${cleanHandle}`;
     }
 
-    function getLinkedinDisplay(handle) {
-        if (!handle) return "";
-        try {
-            if (handle.includes("linkedin.com/in/")) {
-                let path = handle.split("linkedin.com/in/")[1]?.split("?")[0]?.replace(/\/$/, "");
-                if (path) {
-                    return path;
-                }
-            }
-        } catch (e) {}
-        return handle.trim();
-    }
-
     function getEmailUrl(email) {
         if (!email) return "#";
         return `mailto:${email.trim()}`;
     }
-
-    function getPhoneUrl(phone) {
-        if (!phone) return "#";
-        const cleanPhone = phone.replace(/[^0-9+]/g, "");
-        return `tel:${cleanPhone}`;
-    }
 </script>
 
 <svelte:head>
-    <title>{student.name} | IEEE SB BMCE</title>
+    <title>{member.name} | IEEE SB BMCE</title>
 </svelte:head>
 
-<div class="page-container" onclick={handleBackgroundClick} role="button" tabindex="-1" aria-label="Back to Execom" style="cursor: pointer;">
-    <div class="top-bar" onclick={(e) => e.stopPropagation()} role="presentation">
-        <button class="back-btn" onclick={() => goto('/execom')}>
+<div class="page-container">
+    <div class="top-bar">
+        <a href="/execom" class="back-btn">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="19" y1="12" x2="5" y2="12"></line>
                 <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            Back
-        </button>
+            Back to Execom
+        </a>
     </div>
-    <main class="profile-card" onclick={(e) => e.stopPropagation()} role="presentation">
+
+    <main class="profile-card">
         <!-- Left Column: Portrait & Info -->
         <div class="profile-left">
-            <div class="avatar-wrapper">
-                {#if student.image}
-                    <img class="profile-avatar" src="data:image/webp;base64,{student.image}" alt="{student.name}">
-                {:else}
-                    <img class="profile-avatar" src="{avatar_placeholder}" alt="{student.name}">
-                {/if}
+            <div class="avatar-glow-wrap">
+                <div class="avatar-wrapper">
+                    {#if member.image}
+                        <img class="profile-avatar" src="data:image/webp;base64,{member.image}" alt="{member.name}">
+                    {:else}
+                        <img class="profile-avatar" src="{avatar_placeholder}" alt="{member.name}">
+                    {/if}
+                </div>
             </div>
 
-            <h1 class="student-name">{student.name}</h1>
-            <p class="student-role">{student.role}</p>
+            <h1 class="student-name">{member.name}</h1>
+            <p class="student-role">{member.role}</p>
             <div class="accent-bar"></div>
         </div>
 
@@ -113,14 +71,14 @@
         <!-- Right Column: Connect Tiles -->
         <div class="profile-right">
             <div class="connect-header">
-                <h2 class="connect-title">Connect</h2>
+                <h2 class="connect-title">Connect & Contact</h2>
                 <div class="connect-accent-bar"></div>
             </div>
 
             <div class="connect-list">
                 <!-- Instagram -->
-                {#if student.instagram}
-                    <a href="{getInstagramUrl(student.instagram)}" target="_blank" rel="noopener noreferrer" class="connect-card instagram-tile">
+                {#if member.instagram}
+                    <a href="{getInstagramUrl(member.instagram)}" target="_blank" rel="noopener noreferrer" class="connect-card instagram-tile">
                         <div class="icon-box instagram-box">
                             <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
@@ -129,45 +87,45 @@
                             </svg>
                         </div>
                         <div class="card-text">
-                            <span class="card-label">Instagram</span>
-                            <span class="card-value">{getInstagramDisplay(student.instagram)}</span>
+                            <span class="card-platform-title">Instagram</span>
                         </div>
-                    </a>
-                {/if}
-
-                <!-- GitHub -->
-                {#if student.github}
-                    <a href="{getGithubUrl(student.github)}" target="_blank" rel="noopener noreferrer" class="connect-card github-tile">
-                        <div class="icon-box github-box">
-                            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-                            </svg>
-                        </div>
-                        <div class="card-text">
-                            <span class="card-label">GitHub</span>
-                            <span class="card-value">{getGithubDisplay(student.github)}</span>
-                        </div>
+                        <span class="card-arrow">↗</span>
                     </a>
                 {/if}
 
                 <!-- LinkedIn -->
-                {#if student.linkedin}
-                    <a href="{getLinkedinUrl(student.linkedin)}" target="_blank" rel="noopener noreferrer" class="connect-card linkedin-tile">
+                {#if member.linkedin}
+                    <a href="{getLinkedinUrl(member.linkedin)}" target="_blank" rel="noopener noreferrer" class="connect-card linkedin-tile">
                         <div class="icon-box linkedin-box">
                             <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.25c-.95 0-1.72.77-1.72 1.72s.77 1.72 1.72 1.72 1.72-.77 1.72-1.72-.77-1.72-1.72-1.72z"/>
                             </svg>
                         </div>
                         <div class="card-text">
-                            <span class="card-label">LinkedIn</span>
-                            <span class="card-value">{getLinkedinDisplay(student.linkedin)}</span>
+                            <span class="card-platform-title">LinkedIn</span>
                         </div>
+                        <span class="card-arrow">↗</span>
+                    </a>
+                {/if}
+
+                <!-- GitHub -->
+                {#if member.github}
+                    <a href="{getGithubUrl(member.github)}" target="_blank" rel="noopener noreferrer" class="connect-card github-tile">
+                        <div class="icon-box github-box">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                            </svg>
+                        </div>
+                        <div class="card-text">
+                            <span class="card-platform-title">GitHub</span>
+                        </div>
+                        <span class="card-arrow">↗</span>
                     </a>
                 {/if}
 
                 <!-- Email -->
-                {#if student.email}
-                    <a href="{getEmailUrl(student.email)}" class="connect-card email-tile">
+                {#if member.email}
+                    <a href="{getEmailUrl(member.email)}" class="connect-card email-tile">
                         <div class="icon-box email-box">
                             <svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
@@ -176,29 +134,16 @@
                         </div>
                         <div class="card-text">
                             <span class="card-label">Email</span>
-                            <span class="card-value">{student.email}</span>
+                            <span class="card-value">{member.email}</span>
                         </div>
+                        <span class="card-arrow">↗</span>
                     </a>
                 {/if}
 
-                <!-- Phone -->
-                {#if student.phone}
-                    <a href="{getPhoneUrl(student.phone)}" class="connect-card phone-tile">
-                        <div class="icon-box phone-box">
-                            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                            </svg>
-                        </div>
-                        <div class="card-text">
-                            <span class="card-label">Phone</span>
-                            <span class="card-value">{student.phone}</span>
-                        </div>
-                    </a>
-                {/if}
-
-                {#if !student.instagram && !student.github && !student.linkedin && !student.email && !student.phone}
+                {#if !member.instagram && !member.github && !member.linkedin && !member.email}
                     <div class="empty-notice">
-                        <p>No contact details added yet.</p>
+                        <p>Executive Committee Member</p>
+                        <span>IEEE Student Branch BMCE</span>
                     </div>
                 {/if}
             </div>
@@ -426,20 +371,41 @@
         overflow: hidden;
     }
 
+    .card-platform-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: 0.2px;
+    }
+
     .card-label {
-        font-size: 12px;
-        font-weight: 500;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
         color: #64748b;
         margin-bottom: 2px;
     }
 
     .card-value {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 700;
         color: #0f172a;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .card-arrow {
+        margin-left: auto;
+        font-size: 16px;
+        color: #94a3b8;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .connect-card:hover .card-arrow {
+        transform: translate(2px, -2px);
+        color: #0f172a;
     }
 
     /* Icon Box & Monochromatic/Color Transition */
@@ -482,10 +448,6 @@
         background: #ea4335;
     }
 
-    .phone-box {
-        background: #25d366;
-    }
-
     /* On Hover: Switch to full color & subtle scale effect */
     .connect-card:hover .icon-box {
         filter: grayscale(0%) contrast(100%);
@@ -507,10 +469,6 @@
 
     .email-tile:hover {
         border-color: #ea4335;
-    }
-
-    .phone-tile:hover {
-        border-color: #25d366;
     }
 
     .empty-notice {

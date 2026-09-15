@@ -5,17 +5,29 @@ import { error } from "@sveltejs/kit";
 export async function load({ params }) {
     const { id } = params;
 
-    const { data: student, error: fetchErr } = await supabase
+    // Try student_execom first
+    let { data: member } = await supabase
         .from("student_execom")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
-    if (fetchErr || !student) {
-        throw error(404, "Student Execom member not found");
+    // Fallback to faculty_execom
+    if (!member) {
+        const { data: faculty } = await supabase
+            .from("faculty_execom")
+            .select("*")
+            .eq("id", id)
+            .maybeSingle();
+        member = faculty;
+    }
+
+    if (!member) {
+        throw error(404, "Execom member not found");
     }
 
     return {
-        student,
+        member,
+        student: member, // for backwards compatibility
     };
 }
