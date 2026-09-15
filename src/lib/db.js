@@ -33,15 +33,33 @@ function cleanToken(val) {
 function getClient() {
     const rawUrl =
         env.TURSO_DATABASE_URL ||
+        env.TURSO_URL ||
+        env.STORAGE_URL ||
+        env.STORAGE_DATABASE_URL ||
         env.VITE_TURSO_DATABASE_URL ||
-        (typeof process !== "undefined" ? (process.env?.TURSO_DATABASE_URL || process.env?.VITE_TURSO_DATABASE_URL) : "") ||
+        (typeof process !== "undefined"
+            ? process.env?.TURSO_DATABASE_URL ||
+              process.env?.TURSO_URL ||
+              process.env?.STORAGE_URL ||
+              process.env?.STORAGE_DATABASE_URL ||
+              process.env?.VITE_TURSO_DATABASE_URL
+            : "") ||
         (typeof import.meta !== "undefined" && import.meta.env?.VITE_TURSO_DATABASE_URL ? import.meta.env.VITE_TURSO_DATABASE_URL : "") ||
         FALLBACK_URL;
 
     const rawToken =
         env.TURSO_AUTH_TOKEN ||
+        env.TURSO_GROUP_AUTH_TOKEN ||
+        env.STORAGE_AUTH_TOKEN ||
+        env.STORAGE_GROUP_AUTH_TOKEN ||
         env.VITE_TURSO_AUTH_TOKEN ||
-        (typeof process !== "undefined" ? (process.env?.TURSO_AUTH_TOKEN || process.env?.VITE_TURSO_AUTH_TOKEN) : "") ||
+        (typeof process !== "undefined"
+            ? process.env?.TURSO_AUTH_TOKEN ||
+              process.env?.TURSO_GROUP_AUTH_TOKEN ||
+              process.env?.STORAGE_AUTH_TOKEN ||
+              process.env?.STORAGE_GROUP_AUTH_TOKEN ||
+              process.env?.VITE_TURSO_AUTH_TOKEN
+            : "") ||
         (typeof import.meta !== "undefined" && import.meta.env?.VITE_TURSO_AUTH_TOKEN ? import.meta.env.VITE_TURSO_AUTH_TOKEN : "") ||
         FALLBACK_TOKEN;
 
