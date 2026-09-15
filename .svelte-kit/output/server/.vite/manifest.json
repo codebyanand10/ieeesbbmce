@@ -6,7 +6,8 @@
     "isEntry": true,
     "imports": [
       "_internal.js",
-      "_environment.js"
+      "_environment.js",
+      "_shared-server.js"
     ]
   },
   "_avatar.js": {
@@ -22,7 +23,10 @@
   },
   "_db.js": {
     "file": "chunks/db.js",
-    "name": "db"
+    "name": "db",
+    "imports": [
+      "_shared-server.js"
+    ]
   },
   "_environment.js": {
     "file": "chunks/environment.js",
@@ -59,8 +63,13 @@
       "_environment.js",
       "_utils2.js",
       "_equality.js",
-      "_context.js"
+      "_context.js",
+      "_shared-server.js"
     ]
+  },
+  "_shared-server.js": {
+    "file": "chunks/shared-server.js",
+    "name": "shared-server"
   },
   "_shared.js": {
     "file": "chunks/shared.js",
@@ -118,6 +127,7 @@
       "_exports.js",
       "_utils.js",
       "_index.js",
+      "_shared-server.js",
       "_internal.js"
     ]
   },

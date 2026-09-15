@@ -4,12 +4,7 @@ import { r as run_all, d as define_property, a as deferred, n as noop, o as obje
 import { s as safe_equals, e as equals } from "./equality.js";
 import "clsx";
 import { s as setContext } from "./context.js";
-let public_env = {};
-function set_private_env(environment) {
-}
-function set_public_env(environment) {
-  public_env = environment;
-}
+import "./shared-server.js";
 function effect_update_depth_exceeded() {
   {
     throw new Error(`https://svelte.dev/e/effect_update_depth_exceeded`);
@@ -2509,7 +2504,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1r1enyr"
+  version_hash: "km9pmf"
 };
 async function get_hooks() {
   let handle;
@@ -2530,12 +2525,9 @@ async function get_hooks() {
   };
 }
 export {
-  set_public_env as a,
-  set_read_implementation as b,
-  set_manifest as c,
+  set_manifest as a,
   get_hooks as g,
   options as o,
-  public_env as p,
   read_implementation as r,
-  set_private_env as s
+  set_read_implementation as s
 };
