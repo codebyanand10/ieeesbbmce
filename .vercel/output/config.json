@@ -1,0 +1,47 @@
+{
+	"version": 3,
+	"routes": [
+		{
+			"src": "/_app/immutable/.+",
+			"headers": {
+				"cache-control": "public, immutable, max-age=31536000"
+			}
+		},
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "^/?(?:/__data.json)?$",
+			"dest": "/"
+		},
+		{
+			"src": "^/about/?(?:/__data.json)?$",
+			"dest": "/about"
+		},
+		{
+			"src": "^/admin/?(?:/__data.json)?$",
+			"dest": "/admin"
+		},
+		{
+			"src": "^/contact/?(?:/__data.json)?$",
+			"dest": "/contact"
+		},
+		{
+			"src": "^/events/?(?:/__data.json)?$",
+			"dest": "/events"
+		},
+		{
+			"src": "^/execom/?(?:/__data.json)?$",
+			"dest": "/execom"
+		},
+		{
+			"src": "^/execom/([^/]+?)/?(?:/__data.json)?$",
+			"dest": "/execom/[id]"
+		},
+		{
+			"src": "/.*",
+			"dest": "/![-]/catchall"
+		}
+	],
+	"overrides": {}
+}

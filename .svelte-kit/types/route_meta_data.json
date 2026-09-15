@@ -1,0 +1,17 @@
+{
+	"/": [],
+	"/about": [],
+	"/admin": [
+		"src/routes/admin/+page.server.js"
+	],
+	"/contact": [],
+	"/events": [
+		"src/routes/events/+page.server.js"
+	],
+	"/execom": [
+		"src/routes/execom/+page.server.js"
+	],
+	"/execom/[id]": [
+		"src/routes/execom/[id]/+page.server.js"
+	]
+}

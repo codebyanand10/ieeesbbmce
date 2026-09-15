@@ -1,0 +1,303 @@
+{
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "name": "internal",
+    "src": ".svelte-kit/generated/server/internal.js",
+    "isEntry": true,
+    "imports": [
+      "_internal.js",
+      "_environment.js"
+    ]
+  },
+  "_avatar.js": {
+    "file": "chunks/avatar.js",
+    "name": "avatar",
+    "assets": [
+      "_app/immutable/assets/avatar.BRR2mAWb.webp"
+    ]
+  },
+  "_context.js": {
+    "file": "chunks/context.js",
+    "name": "context"
+  },
+  "_db.js": {
+    "file": "chunks/db.js",
+    "name": "db"
+  },
+  "_environment.js": {
+    "file": "chunks/environment.js",
+    "name": "environment"
+  },
+  "_equality.js": {
+    "file": "chunks/equality.js",
+    "name": "equality"
+  },
+  "_exports.js": {
+    "file": "chunks/exports.js",
+    "name": "exports"
+  },
+  "_index.js": {
+    "file": "chunks/index.js",
+    "name": "index",
+    "imports": [
+      "_utils2.js",
+      "_equality.js"
+    ]
+  },
+  "_index2.js": {
+    "file": "chunks/index2.js",
+    "name": "index",
+    "imports": [
+      "_context.js"
+    ]
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "name": "internal",
+    "imports": [
+      "_index2.js",
+      "_environment.js",
+      "_utils2.js",
+      "_equality.js",
+      "_context.js"
+    ]
+  },
+  "_shared.js": {
+    "file": "chunks/shared.js",
+    "name": "shared",
+    "imports": [
+      "_utils.js"
+    ]
+  },
+  "_state.svelte.js": {
+    "file": "chunks/state.svelte.js",
+    "name": "state.svelte",
+    "imports": [
+      "_utils2.js"
+    ]
+  },
+  "_utils.js": {
+    "file": "chunks/utils.js",
+    "name": "utils"
+  },
+  "_utils2.js": {
+    "file": "chunks/utils2.js",
+    "name": "utils"
+  },
+  "node_modules/@sveltejs/kit/src/runtime/app/server/remote/index.js": {
+    "file": "remote-entry.js",
+    "name": "remote-entry",
+    "src": "node_modules/@sveltejs/kit/src/runtime/app/server/remote/index.js",
+    "isEntry": true,
+    "imports": [
+      "_shared.js",
+      "_environment.js"
+    ]
+  },
+  "node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "name": "entries/fallbacks/error.svelte",
+    "src": "node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_context.js",
+      "_state.svelte.js",
+      "_exports.js",
+      "_utils.js",
+      "_index.js"
+    ]
+  },
+  "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "name": "index",
+    "src": "node_modules/@sveltejs/kit/src/runtime/server/index.js",
+    "isEntry": true,
+    "imports": [
+      "_environment.js",
+      "_shared.js",
+      "_exports.js",
+      "_utils.js",
+      "_index.js",
+      "_internal.js"
+    ]
+  },
+  "src/lib/assets/IEEE-logo.svg": {
+    "file": "_app/immutable/assets/IEEE-logo.Dew2ODSW.svg",
+    "src": "src/lib/assets/IEEE-logo.svg"
+  },
+  "src/lib/assets/avatar.webp": {
+    "file": "_app/immutable/assets/avatar.BRR2mAWb.webp",
+    "src": "src/lib/assets/avatar.webp"
+  },
+  "src/lib/assets/bmce-building.webp": {
+    "file": "_app/immutable/assets/bmce-building.BvisuNiL.webp",
+    "src": "src/lib/assets/bmce-building.webp"
+  },
+  "src/lib/assets/event-posters/placehold.webp": {
+    "file": "_app/immutable/assets/placehold.5Asa3K3G.webp",
+    "src": "src/lib/assets/event-posters/placehold.webp"
+  },
+  "src/lib/assets/favicon.svg": {
+    "file": "_app/immutable/assets/favicon.BKvfXLx4.svg",
+    "src": "src/lib/assets/favicon.svg"
+  },
+  "src/lib/assets/ieeesbbmce-logo.svg": {
+    "file": "_app/immutable/assets/ieeesbbmce-logo.Dx0JDW89.svg",
+    "src": "src/lib/assets/ieeesbbmce-logo.svg"
+  },
+  "src/routes/+layout.svelte": {
+    "file": "entries/pages/_layout.svelte.js",
+    "name": "entries/pages/_layout.svelte",
+    "src": "src/routes/+layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index2.js",
+      "_context.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_layout.I1ZVHr5w.css"
+    ],
+    "assets": [
+      "_app/immutable/assets/ieeesbbmce-logo.Dx0JDW89.svg",
+      "_app/immutable/assets/IEEE-logo.Dew2ODSW.svg",
+      "_app/immutable/assets/favicon.BKvfXLx4.svg"
+    ]
+  },
+  "src/routes/+page.svelte": {
+    "file": "entries/pages/_page.svelte.js",
+    "name": "entries/pages/_page.svelte",
+    "src": "src/routes/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_context.js",
+      "_index2.js",
+      "_utils2.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.BsV71iVZ.css"
+    ]
+  },
+  "src/routes/about/+page.svelte": {
+    "file": "entries/pages/about/_page.svelte.js",
+    "name": "entries/pages/about/_page.svelte",
+    "src": "src/routes/about/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index2.js",
+      "_context.js",
+      "_utils2.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.d5Gmeipl.css"
+    ],
+    "assets": [
+      "_app/immutable/assets/bmce-building.BvisuNiL.webp"
+    ]
+  },
+  "src/routes/admin/+page.server.js": {
+    "file": "entries/pages/admin/_page.server.js",
+    "name": "entries/pages/admin/_page.server",
+    "src": "src/routes/admin/+page.server.js",
+    "isEntry": true,
+    "imports": [
+      "_db.js"
+    ]
+  },
+  "src/routes/admin/+page.svelte": {
+    "file": "entries/pages/admin/_page.svelte.js",
+    "name": "entries/pages/admin/_page.svelte",
+    "src": "src/routes/admin/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index2.js",
+      "_avatar.js",
+      "_context.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.0GANMXAf.css"
+    ],
+    "assets": [
+      "_app/immutable/assets/placehold.5Asa3K3G.webp"
+    ]
+  },
+  "src/routes/contact/+page.svelte": {
+    "file": "entries/pages/contact/_page.svelte.js",
+    "name": "entries/pages/contact/_page.svelte",
+    "src": "src/routes/contact/+page.svelte",
+    "isEntry": true,
+    "css": [
+      "_app/immutable/assets/_page.Caepy5vE.css"
+    ]
+  },
+  "src/routes/events/+page.server.js": {
+    "file": "entries/pages/events/_page.server.js",
+    "name": "entries/pages/events/_page.server",
+    "src": "src/routes/events/+page.server.js",
+    "isEntry": true,
+    "imports": [
+      "_db.js"
+    ]
+  },
+  "src/routes/events/+page.svelte": {
+    "file": "entries/pages/events/_page.svelte.js",
+    "name": "entries/pages/events/_page.svelte",
+    "src": "src/routes/events/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index2.js",
+      "_context.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.FMm1p4nk.css"
+    ]
+  },
+  "src/routes/execom/+page.server.js": {
+    "file": "entries/pages/execom/_page.server.js",
+    "name": "entries/pages/execom/_page.server",
+    "src": "src/routes/execom/+page.server.js",
+    "isEntry": true,
+    "imports": [
+      "_db.js"
+    ]
+  },
+  "src/routes/execom/+page.svelte": {
+    "file": "entries/pages/execom/_page.svelte.js",
+    "name": "entries/pages/execom/_page.svelte",
+    "src": "src/routes/execom/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index2.js",
+      "_avatar.js",
+      "_context.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.Dz6NDJRh.css"
+    ]
+  },
+  "src/routes/execom/[id]/+page.server.js": {
+    "file": "entries/pages/execom/_id_/_page.server.js",
+    "name": "entries/pages/execom/_id_/_page.server",
+    "src": "src/routes/execom/[id]/+page.server.js",
+    "isEntry": true,
+    "imports": [
+      "_db.js"
+    ]
+  },
+  "src/routes/execom/[id]/+page.svelte": {
+    "file": "entries/pages/execom/_id_/_page.svelte.js",
+    "name": "entries/pages/execom/_id_/_page.svelte",
+    "src": "src/routes/execom/[id]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index2.js",
+      "_avatar.js",
+      "_exports.js",
+      "_utils.js",
+      "_state.svelte.js",
+      "_context.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.BqqMnzZ5.css"
+    ]
+  }
+}
