@@ -2,11 +2,18 @@ import db from "$lib/db";
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-    const events = ((await db.execute("SELECT * FROM events")).rows).reverse();
-    const event_count = events.length;
-    
-    return {
-        events,
-        event_count
-    };
+    try {
+        const result = await db.execute("SELECT * FROM events");
+        const events = [...result.rows].reverse();
+        return {
+            events,
+            event_count: events.length
+        };
+    } catch (err) {
+        console.error("Error loading events:", err);
+        return {
+            events: [],
+            event_count: 0
+        };
+    }
 }
