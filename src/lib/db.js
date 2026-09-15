@@ -1,47 +1,34 @@
 import { createClient } from "@supabase/supabase-js";
-import { env } from "$env/dynamic/private";
 
-const FALLBACK_URL = "https://qepfbsvxwtlxanzlvbeb.supabase.co";
-const FALLBACK_KEY = "sb_publishable_ZU3-_yHxJeBJ0gv5jWjrfg_s2ZX8fB1";
+const SUPABASE_URL = "https://qepfbsvxwtlxanzlvbeb.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFlcGZic3Z4d3RseGFuemx2YmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0NjI1NjYsImV4cCI6MjEwNTAzODU2Nn0.NhBZ6q8UwHLeAulWIFaQ0nAaIWa5TfQnz1X87fl7X0I";
 
-function getCredentials() {
-    const supabaseUrl =
-        env.PUBLIC_SUPABASE_URL ||
-        env.NEXT_PUBLIC_SUPABASE_URL ||
-        env.SUPABASE_URL ||
-        (typeof process !== "undefined"
-            ? process.env?.PUBLIC_SUPABASE_URL ||
-              process.env?.NEXT_PUBLIC_SUPABASE_URL ||
-              process.env?.SUPABASE_URL
-            : "") ||
-        (typeof import.meta !== "undefined" && import.meta.env?.PUBLIC_SUPABASE_URL
-            ? import.meta.env.PUBLIC_SUPABASE_URL
-            : "") ||
-        FALLBACK_URL;
-
-    const supabaseKey =
-        env.PUBLIC_SUPABASE_ANON_KEY ||
-        env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-        env.SUPABASE_ANON_KEY ||
-        env.SUPABASE_SERVICE_ROLE_KEY ||
-        (typeof process !== "undefined"
-            ? process.env?.PUBLIC_SUPABASE_ANON_KEY ||
-              process.env?.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
-              process.env?.SUPABASE_ANON_KEY ||
-              process.env?.SUPABASE_SERVICE_ROLE_KEY
-            : "") ||
-        (typeof import.meta !== "undefined" && import.meta.env?.PUBLIC_SUPABASE_ANON_KEY
-            ? import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-            : "") ||
-        FALLBACK_KEY;
-
-    return {
-        supabaseUrl: supabaseUrl.trim() || FALLBACK_URL,
-        supabaseKey: supabaseKey.trim() || FALLBACK_KEY,
-    };
+function getEnv(key) {
+    if (typeof process !== "undefined" && process.env && process.env[key]) {
+        return process.env[key];
+    }
+    return null;
 }
 
-const { supabaseUrl, supabaseKey } = getCredentials();
-export const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl =
+    getEnv("NEXT_PUBLIC_SUPABASE_URL") ||
+    getEnv("PUBLIC_SUPABASE_URL") ||
+    getEnv("SUPABASE_URL") ||
+    SUPABASE_URL;
+
+const supabaseKey =
+    getEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY") ||
+    getEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY") ||
+    getEnv("PUBLIC_SUPABASE_ANON_KEY") ||
+    getEnv("SUPABASE_ANON_KEY") ||
+    getEnv("SUPABASE_SERVICE_ROLE_KEY") ||
+    SUPABASE_ANON_KEY;
+
+export const supabase = createClient(supabaseUrl.trim(), supabaseKey.trim(), {
+    auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+    },
+});
 
 export default supabase;

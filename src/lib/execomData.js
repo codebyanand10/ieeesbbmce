@@ -1,21 +1,10 @@
-// Execom Members Data using photos from src/ieee
-import sreyasImg from "../ieee/sreyas.png";
-import joveetaImg from "../ieee/joveeta.png";
-import annImg from "../ieee/ann.png";
-import agnusImg from "../ieee/agnus.png";
-import rubenImg from "../ieee/ruben.png";
-import amithaImg from "../ieee/amitha.png";
-import mishalImg from "../ieee/mishal.png";
-import anandImg from "../ieee/anand.png";
-import roshiniImg from "../ieee/roshini.png";
-import reneeshImg from "../ieee/reneesh.png";
-
+// Execom Members Data
 export const execomMembers = [
     {
         id: "1",
         name: "Sreyas Kumar A",
         role: "IEEE Chair",
-        image: sreyasImg,
+        image: "/ieee/sreyas.png",
         instagram: null,
         github: null,
         linkedin: null,
@@ -26,7 +15,7 @@ export const execomMembers = [
         id: "2",
         name: "Joveeta Aniyan",
         role: "SB Secretary",
-        image: joveetaImg,
+        image: "/ieee/joveeta.png",
         instagram: "https://www.instagram.com/joveeta_aniyan_06?stkn=enhuYWRiNW96d2Y3",
         github: null,
         linkedin: "https://www.linkedin.com/in/joveeta-aniyan-b77275330?utm_source=share_via&utm_content=profile&utm_medium=member_android",
@@ -37,7 +26,7 @@ export const execomMembers = [
         id: "3",
         name: "Ann P. Mathew",
         role: "SB Vice Chair",
-        image: annImg,
+        image: "/ieee/ann.png",
         instagram: "https://www.instagram.com/_ann__rachel_?stkn=MXFnd2phMWlmanllaA==",
         github: "https://github.com/annpmathew21-debug",
         linkedin: "https://www.linkedin.com/in/ann-p-mathew-b97431328",
@@ -48,7 +37,7 @@ export const execomMembers = [
         id: "4",
         name: "Agnus Varghese",
         role: "CS Chair",
-        image: agnusImg,
+        image: "/ieee/agnus.png",
         instagram: "https://www.instagram.com/__agnus__varghese__?stkn=OWdrNWQ1d2Nhbnl2",
         github: null,
         linkedin: "https://www.linkedin.com/in/agnus-varghese-9a88a0369?utm_source=share_via&utm_content=profile&utm_medium=member_android",
@@ -59,7 +48,7 @@ export const execomMembers = [
         id: "5",
         name: "Ruben Koshy",
         role: "Computer Society Secretary,\nLink Representative",
-        image: rubenImg,
+        image: "/ieee/ruben.png",
         instagram: "https://www.instagram.com/_its_me_ruben_?stkn=MzljaGljdDhsZmk2",
         github: "https://github.com/Ruben-15",
         linkedin: "https://www.linkedin.com/in/ruben-koshy-ba7227280?utm_source=share_via&utm_content=profile&utm_medium=member_android",
@@ -70,7 +59,7 @@ export const execomMembers = [
         id: "6",
         name: "Amitha Jom",
         role: "Computer Society Vice Chair, MDC",
-        image: amithaImg,
+        image: "/ieee/amitha.png",
         instagram: "https://www.instagram.com/ami_tha_jom?stkn=MWloeG11Y3g0dXNicQ==",
         github: null,
         linkedin: "https://www.linkedin.com/in/amitha-jom-28b645332?utm_source=share_via&utm_content=profile&utm_medium=member_android",
@@ -81,7 +70,7 @@ export const execomMembers = [
         id: "7",
         name: "Muhammad Mishal Shihab",
         role: "SB Treasurer",
-        image: mishalImg,
+        image: "/ieee/mishal.png",
         instagram: "https://www.instagram.com/_mishal_bin_shihab_?stkn=OHRzMHc3dmdnbnF4",
         github: null,
         linkedin: "https://www.linkedin.com/in/muhammad-mishal-bin-shihab-1b2405326?utm_source=share_via&utm_content=profile&utm_medium=member_android",
@@ -92,7 +81,7 @@ export const execomMembers = [
         id: "8",
         name: "Anand A B",
         role: "Web Master",
-        image: anandImg,
+        image: "/ieee/anand.png",
         instagram: "i.4_anand",
         github: "codebyanand10",
         linkedin: "anand",
@@ -103,7 +92,7 @@ export const execomMembers = [
         id: "9",
         name: "Fathima Roshini Siyad",
         role: "Women In Computing",
-        image: roshiniImg,
+        image: "/ieee/roshini.png",
         instagram: "https://www.instagram.com/roshnii.e_?stkn=MW9zdW5kOW02MXZhNA==",
         github: "https://github.com/FATHIMA-ROSHINI",
         linkedin: "https://www.linkedin.com/in/fathima-roshini-siyad-8477292b3",
@@ -114,7 +103,7 @@ export const execomMembers = [
         id: "10",
         name: "Renesh Rajesh",
         role: "Project and Technical Coordinator",
-        image: reneeshImg,
+        image: "/ieee/reneesh.png",
         instagram: "https://www.instagram.com/re._.nesh?stkn=MTFzdXRiNWlpZzZieA==",
         github: "https://github.com/renesh-42",
         linkedin: "https://www.linkedin.com/in/renesh-rajesh-b853a8280?utm_source=share_via&utm_content=profile&utm_medium=member_android",
