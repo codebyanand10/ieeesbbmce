@@ -2,6 +2,14 @@
     import avatar_placeholder from "$lib/assets/avatar.webp";
 
     let { data } = $props();
+
+    function getImageSrc(img) {
+        if (!img) return avatar_placeholder;
+        if (typeof img === "string" && (img.startsWith("/") || img.startsWith("http://") || img.startsWith("https://") || img.startsWith("data:") || img.startsWith("blob:") || img.includes("."))) {
+            return img;
+        }
+        return `data:image/webp;base64,${img}`;
+    }
 </script>
 
 <div class="main">
@@ -15,11 +23,7 @@
                     href="/execom/{faculty.id}"
                 >
                     <div class="faculty-img-label">
-                        {#if faculty.image}
-                            <img class="faculty-img" src="data:image/webp;base64,{faculty.image}" alt="{faculty.name}">
-                        {:else}
-                            <img class="faculty-img" src="{avatar_placeholder}" alt="{faculty.name}">
-                        {/if}
+                        <img class="faculty-img" src="{getImageSrc(faculty.image)}" alt="{faculty.name}">
                     </div>
                     <div class="faculty-name">{faculty.name}</div>
                     <div class="faculty-role">{faculty.role}</div>
@@ -44,11 +48,7 @@
                 href="/execom/{student.id}"
             >
                 <div class="faculty-img-label">
-                    {#if student.image}
-                        <img class="faculty-img" src="data:image/webp;base64,{student.image}" alt="{student.name}">
-                    {:else}
-                        <img class="faculty-img" src="{avatar_placeholder}" alt="{student.name}">
-                    {/if}
+                    <img class="faculty-img" src="{getImageSrc(student.image)}" alt="{student.name}">
                 </div>
                 <div class="faculty-name">{student.name}</div>
                 <div class="faculty-role">{student.role}</div>

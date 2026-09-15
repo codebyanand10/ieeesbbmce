@@ -5,6 +5,14 @@
     let { data } = $props();
     let member = $derived(data.member || data.student);
 
+    function getImageSrc(img) {
+        if (!img) return avatar_placeholder;
+        if (typeof img === "string" && (img.startsWith("/") || img.startsWith("http://") || img.startsWith("https://") || img.startsWith("data:") || img.startsWith("blob:") || img.includes("."))) {
+            return img;
+        }
+        return `data:image/webp;base64,${img}`;
+    }
+
     function getInstagramUrl(handle) {
         if (!handle) return "#";
         if (handle.startsWith("http://") || handle.startsWith("https://")) return handle;
@@ -51,11 +59,7 @@
         <div class="profile-left">
             <div class="avatar-glow-wrap">
                 <div class="avatar-wrapper">
-                    {#if member.image}
-                        <img class="profile-avatar" src="data:image/webp;base64,{member.image}" alt="{member.name}">
-                    {:else}
-                        <img class="profile-avatar" src="{avatar_placeholder}" alt="{member.name}">
-                    {/if}
+                    <img class="profile-avatar" src="{getImageSrc(member.image)}" alt="{member.name}">
                 </div>
             </div>
 
