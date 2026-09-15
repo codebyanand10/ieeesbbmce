@@ -112,6 +112,12 @@
     max-width: 1200px;
 }
 
+@media only screen and (min-width: 901px) {
+    .faculty-div > .faculty-grid:last-child:nth-child(3n + 1) {
+        grid-column: 2;
+    }
+}
+
 .faculty-grid {
     display: flex;
     flex-direction: column;
