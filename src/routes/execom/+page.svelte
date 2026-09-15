@@ -608,43 +608,59 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    filter: grayscale(100%);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.instagram-icon {
+.instagram-tile:hover .instagram-icon {
     background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
     color: white;
+    filter: grayscale(0%);
+    border-color: transparent;
+    transform: scale(1.1);
 }
 .instagram-tile:hover {
     border-color: #fd1d1d;
-    box-shadow: 0 6px 20px rgba(253, 29, 29, 0.3);
+    box-shadow: 0 6px 20px rgba(253, 29, 29, 0.35);
 }
 
-.linkedin-icon {
+.linkedin-tile:hover .linkedin-icon {
     background: #0077b5;
     color: white;
+    filter: grayscale(0%);
+    border-color: transparent;
+    transform: scale(1.1);
 }
 .linkedin-tile:hover {
     border-color: #0077b5;
-    box-shadow: 0 6px 20px rgba(0, 119, 181, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 119, 181, 0.35);
 }
 
-.github-icon {
+.github-tile:hover .github-icon {
     background: #24292e;
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    filter: grayscale(0%);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
 }
 .github-tile:hover {
     border-color: #ffffff;
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
 }
 
-.email-icon {
+.email-tile:hover .email-icon {
     background: linear-gradient(135deg, #0284c7, #2563eb);
     color: white;
+    filter: grayscale(0%);
+    border-color: transparent;
+    transform: scale(1.1);
 }
 .email-tile:hover {
     border-color: #38bdf8;
-    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
 }
 
 .tile-info {

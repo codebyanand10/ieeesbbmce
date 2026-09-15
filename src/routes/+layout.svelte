@@ -150,6 +150,13 @@ function open_nav() {
     max-height: 30px;
     padding: 8px;
     margin-top: 4px;
+    filter: grayscale(100%) opacity(0.85);
+    transition: filter 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
+}
+
+.black-logo:hover {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.06);
 }
 
 .ham-button {
