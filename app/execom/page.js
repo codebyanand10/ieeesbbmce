@@ -43,7 +43,7 @@ export default async function ExecomPage() {
                             <Link
                                 key={faculty.id}
                                 className="faculty-grid clickable-card"
-                                href={`/execom/${faculty.id}`}
+                                href={`/execom/${faculty.slug || faculty.id}`}
                             >
                                 <div className="faculty-img-label">
                                     <img
@@ -73,7 +73,7 @@ export default async function ExecomPage() {
                     <Link
                         key={student.id}
                         className="faculty-grid clickable-card"
-                        href={`/execom/${student.id}`}
+                        href={`/execom/${student.slug || student.id}`}
                     >
                         <div className="faculty-img-label">
                             <img

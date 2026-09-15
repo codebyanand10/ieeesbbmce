@@ -39,29 +39,49 @@ function getEmailUrl(email) {
     return `mailto:${email.trim()}`;
 }
 
-async function getMember(id) {
-    // 1. Check local static execom data first
-    const localMember = getExecomMemberById(id);
+async function getMember(idOrSlug) {
+    // 1. Check local static execom data first by id, slug or name
+    const localMember = getExecomMemberById(idOrSlug);
     if (localMember) return localMember;
 
     // 2. Check Supabase student_execom
     try {
-        const { data: student } = await supabase
-            .from("student_execom")
-            .select("*")
-            .eq("id", id)
-            .single();
-        if (student) return student;
+        if (!isNaN(Number(idOrSlug))) {
+            const { data: student } = await supabase
+                .from("student_execom")
+                .select("*")
+                .eq("id", idOrSlug)
+                .maybeSingle();
+            if (student) return student;
+        } else {
+            const { data: student } = await supabase
+                .from("student_execom")
+                .select("*")
+                .ilike("name", `%${idOrSlug}%`)
+                .limit(1)
+                .maybeSingle();
+            if (student) return student;
+        }
     } catch {}
 
     // 3. Check Supabase faculty_execom
     try {
-        const { data: faculty } = await supabase
-            .from("faculty_execom")
-            .select("*")
-            .eq("id", id)
-            .single();
-        if (faculty) return faculty;
+        if (!isNaN(Number(idOrSlug))) {
+            const { data: faculty } = await supabase
+                .from("faculty_execom")
+                .select("*")
+                .eq("id", idOrSlug)
+                .maybeSingle();
+            if (faculty) return faculty;
+        } else {
+            const { data: faculty } = await supabase
+                .from("faculty_execom")
+                .select("*")
+                .ilike("name", `%${idOrSlug}%`)
+                .limit(1)
+                .maybeSingle();
+            if (faculty) return faculty;
+        }
     } catch {}
 
     return null;

@@ -2,6 +2,7 @@
 export const execomMembers = [
     {
         id: "1",
+        slug: "sreyas",
         name: "Sreyas Kumar A",
         role: "IEEE Chair",
         image: "/ieee/sreyas.png",
@@ -13,6 +14,7 @@ export const execomMembers = [
     },
     {
         id: "2",
+        slug: "joveeta",
         name: "Joveeta Aniyan",
         role: "SB Secretary",
         image: "/ieee/joveeta.png",
@@ -24,6 +26,7 @@ export const execomMembers = [
     },
     {
         id: "3",
+        slug: "ann",
         name: "Ann P. Mathew",
         role: "SB Vice Chair",
         image: "/ieee/ann.png",
@@ -35,6 +38,7 @@ export const execomMembers = [
     },
     {
         id: "4",
+        slug: "agnus",
         name: "Agnus Varghese",
         role: "CS Chair",
         image: "/ieee/agnus.png",
@@ -46,6 +50,7 @@ export const execomMembers = [
     },
     {
         id: "5",
+        slug: "ruben",
         name: "Ruben Koshy",
         role: "Computer Society Secretary,\nLink Representative",
         image: "/ieee/ruben.png",
@@ -57,6 +62,7 @@ export const execomMembers = [
     },
     {
         id: "6",
+        slug: "amitha",
         name: "Amitha Jom",
         role: "Computer Society Vice Chair, MDC",
         image: "/ieee/amitha.png",
@@ -68,6 +74,7 @@ export const execomMembers = [
     },
     {
         id: "7",
+        slug: "mishal",
         name: "Muhammad Mishal Shihab",
         role: "SB Treasurer",
         image: "/ieee/mishal.png",
@@ -79,6 +86,7 @@ export const execomMembers = [
     },
     {
         id: "8",
+        slug: "anand",
         name: "Anand A B",
         role: "Web Master",
         image: "/ieee/anand.png",
@@ -90,6 +98,7 @@ export const execomMembers = [
     },
     {
         id: "9",
+        slug: "roshini",
         name: "Fathima Roshini Siyad",
         role: "Women In Computing",
         image: "/ieee/roshini.png",
@@ -101,6 +110,7 @@ export const execomMembers = [
     },
     {
         id: "10",
+        slug: "renesh",
         name: "Renesh Rajesh",
         role: "Project and Technical Coordinator",
         image: "/ieee/reneesh.png",
@@ -116,6 +126,17 @@ export function getExecomMembers() {
     return execomMembers;
 }
 
-export function getExecomMemberById(id) {
-    return execomMembers.find((m) => String(m.id) === String(id));
+export function getExecomMemberById(identifier) {
+    if (!identifier) return null;
+    const clean = String(identifier).toLowerCase().trim();
+
+    return execomMembers.find((m) => {
+        if (String(m.id) === clean) return true;
+        if (m.slug && m.slug.toLowerCase() === clean) return true;
+        if (m.name.toLowerCase() === clean) return true;
+        if (m.name.toLowerCase().replace(/[^a-z0-9]/g, "") === clean.replace(/[^a-z0-9]/g, "")) return true;
+        if (m.name.toLowerCase().split(" ")[0] === clean) return true;
+        if (clean === "reneesh" && (m.slug === "renesh" || m.name.toLowerCase().includes("renesh"))) return true;
+        return false;
+    });
 }
