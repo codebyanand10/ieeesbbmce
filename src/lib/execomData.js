@@ -5,7 +5,7 @@ export const staffExecomMembers = [
         slug: "gouri",
         name: "Dr. Gouri M S",
         role: "Chapter Advisor",
-        image: "/assets/avatar.webp",
+        image: "/ieee/gouri.png",
         instagram: "https://www.instagram.com/talkingturkeyy?stkn=MW1pbDR6cG9va3Fzdg%3D%3D&utm_source=qr",
         github: null,
         linkedin: "https://www.linkedin.com/in/dr-gourims?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
