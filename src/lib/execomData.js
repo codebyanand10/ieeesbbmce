@@ -1,4 +1,19 @@
 // Execom Members Data
+export const staffExecomMembers = [
+    {
+        id: "staff-1",
+        slug: "gouri",
+        name: "Dr. Gouri M S",
+        role: "Chapter Advisor",
+        image: "/assets/avatar.webp",
+        instagram: "https://www.instagram.com/talkingturkeyy?stkn=MW1pbDR6cG9va3Fzdg%3D%3D&utm_source=qr",
+        github: null,
+        linkedin: "https://www.linkedin.com/in/dr-gourims?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+        email: "gourimohans@gmail.com",
+        phone: null,
+    },
+];
+
 export const execomMembers = [
     {
         id: "1",
@@ -122,6 +137,10 @@ export const execomMembers = [
     },
 ];
 
+export function getStaffExecomMembers() {
+    return staffExecomMembers;
+}
+
 export function getExecomMembers() {
     return execomMembers;
 }
@@ -129,14 +148,16 @@ export function getExecomMembers() {
 export function getExecomMemberById(identifier) {
     if (!identifier) return null;
     const clean = String(identifier).toLowerCase().trim();
+    const allMembers = [...staffExecomMembers, ...execomMembers];
 
-    return execomMembers.find((m) => {
-        if (String(m.id) === clean) return true;
+    return allMembers.find((m) => {
+        if (String(m.id).toLowerCase() === clean) return true;
         if (m.slug && m.slug.toLowerCase() === clean) return true;
         if (m.name.toLowerCase() === clean) return true;
         if (m.name.toLowerCase().replace(/[^a-z0-9]/g, "") === clean.replace(/[^a-z0-9]/g, "")) return true;
         if (m.name.toLowerCase().split(" ")[0] === clean) return true;
         if (clean === "reneesh" && (m.slug === "renesh" || m.name.toLowerCase().includes("renesh"))) return true;
+        if ((clean === "gouri" || clean === "dr-gouri" || clean === "dr-gourims" || clean === "drgourims") && (m.slug === "gouri" || m.name.toLowerCase().includes("gouri"))) return true;
         return false;
     });
 }

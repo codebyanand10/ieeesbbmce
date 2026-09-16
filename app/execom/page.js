@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { getExecomMembers } from "@/src/lib/execomData";
+import { getStaffExecomMembers, getExecomMembers } from "@/src/lib/execomData";
 import supabase from "@/src/lib/db";
 
 export const metadata = {
     title: "Executive Committee | IEEE SB BMCE",
-    description: "Meet the executive committee leaders of IEEE Student Branch BMCE.",
+    description: "Meet the staff advisors and student leaders of IEEE Student Branch BMCE.",
 };
 
 export const revalidate = 0;
@@ -17,7 +17,7 @@ function getImageSrc(img) {
     return `data:image/webp;base64,${img}`;
 }
 
-async function getFacultyExecom() {
+async function getDbFacultyExecom() {
     try {
         const { data } = await supabase
             .from("faculty_execom")
@@ -30,30 +30,33 @@ async function getFacultyExecom() {
 }
 
 export default async function ExecomPage() {
-    const facultyList = await getFacultyExecom();
+    const dbFacultyList = await getDbFacultyExecom();
+    const staticStaffList = getStaffExecomMembers();
+    const staffList = [...staticStaffList, ...dbFacultyList];
     const studentList = getExecomMembers();
 
     return (
         <div className="main">
-            {facultyList.length > 0 && (
+            {/* Staff Execom Section */}
+            {staffList.length > 0 && (
                 <>
-                    <h1 className="faculty-head">Faculty Execom</h1>
+                    <h1 className="faculty-head">Staff Execom</h1>
                     <div className="faculty-div">
-                        {facultyList.map((faculty) => (
+                        {staffList.map((staff) => (
                             <Link
-                                key={faculty.id}
+                                key={staff.id}
                                 className="faculty-grid clickable-card"
-                                href={`/execom/${faculty.slug || faculty.id}`}
+                                href={`/execom/${staff.slug || staff.id}`}
                             >
                                 <div className="faculty-img-label">
                                     <img
                                         className="faculty-img"
-                                        src={getImageSrc(faculty.image)}
-                                        alt={faculty.name}
+                                        src={getImageSrc(staff.image)}
+                                        alt={staff.name}
                                     />
                                 </div>
-                                <div className="faculty-name">{faculty.name}</div>
-                                <div className="faculty-role">{faculty.role}</div>
+                                <div className="faculty-name">{staff.name}</div>
+                                <div className="faculty-role">{staff.role}</div>
                                 <div className="card-action-hint">
                                     <span>View Profile</span>
                                     <svg className="hint-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -67,7 +70,10 @@ export default async function ExecomPage() {
                 </>
             )}
 
-            <h1 className="faculty-head">Student Execom</h1>
+            {/* Student Execom Section */}
+            <h1 className="faculty-head" style={{ marginTop: staffList.length > 0 ? "48px" : "36px" }}>
+                Student Execom
+            </h1>
             <div className="faculty-div">
                 {studentList.map((student) => (
                     <Link
