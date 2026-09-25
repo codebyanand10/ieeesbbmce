@@ -42,18 +42,29 @@ function getEventImageSrc(image) {
     return `data:image/webp;base64,${image}`;
 }
 
+function sortEventsByLatest(list) {
+    if (!Array.isArray(list)) return [];
+    return [...list].sort((a, b) => {
+        const timeA = a?.date ? new Date(a.date).getTime() : 0;
+        const timeB = b?.date ? new Date(b.date).getTime() : 0;
+        if (timeB !== timeA) return timeB - timeA;
+        return (Number(b?.id) || 0) - (Number(a?.id) || 0);
+    });
+}
+
 async function getEvents() {
     try {
         const { data, error } = await supabase
             .from("events")
             .select("*")
+            .order("date", { ascending: false, nullsFirst: false })
             .order("id", { ascending: false });
 
         if (error) {
             console.error("Supabase events fetch error:", error);
             return [];
         }
-        return data || [];
+        return sortEventsByLatest(data || []);
     } catch (err) {
         console.error("Error fetching events:", err);
         return [];

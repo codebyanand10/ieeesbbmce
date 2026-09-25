@@ -15,6 +15,16 @@ import {
     deleteStdExecom,
 } from "./actions";
 
+function sortEventsByLatest(list) {
+    if (!Array.isArray(list)) return [];
+    return [...list].sort((a, b) => {
+        const timeA = a?.date ? new Date(a.date).getTime() : 0;
+        const timeB = b?.date ? new Date(b.date).getTime() : 0;
+        if (timeB !== timeA) return timeB - timeA;
+        return (Number(b?.id) || 0) - (Number(a?.id) || 0);
+    });
+}
+
 export default function AdminClient({ initialEvents, initialFaculty, initialStudents }) {
     const router = useRouter();
     const [isAuth, setIsAuth] = useState(false);
@@ -22,7 +32,7 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
     const [feedback, setFeedback] = useState({ message: "", type: "" });
     const [tabIndex, setTabIndex] = useState(0);
 
-    const [events, setEvents] = useState(initialEvents || []);
+    const [events, setEvents] = useState(() => sortEventsByLatest(initialEvents || []));
     const [facultyList, setFacultyList] = useState(initialFaculty || []);
     const [studentList, setStudentList] = useState(initialStudents || []);
 
@@ -33,7 +43,7 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
 
     // Keep state in sync with server props
     useEffect(() => {
-        if (initialEvents) setEvents(initialEvents);
+        if (initialEvents) setEvents(sortEventsByLatest(initialEvents));
     }, [initialEvents]);
 
     useEffect(() => {
@@ -101,7 +111,7 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
 
         if (res.success) {
             if (res.data) {
-                setEvents((prev) => [res.data, ...prev.filter((item) => item.id !== res.data.id)]);
+                setEvents((prev) => sortEventsByLatest([res.data, ...prev.filter((item) => item.id !== res.data.id)]));
             }
             form.reset();
             setEventImgPreview("");
@@ -121,7 +131,7 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
 
         if (res.success) {
             if (res.data) {
-                setEvents((prev) => prev.map((ev) => (ev.id === res.data.id ? res.data : ev)));
+                setEvents((prev) => sortEventsByLatest(prev.map((ev) => (ev.id === res.data.id ? res.data : ev))));
             }
             showNotification("Event updated successfully!");
             router.refresh();
@@ -426,7 +436,7 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
                     </form>
 
                     <div className="items-list">
-                        {events.map((event) => (
+                        {sortEventsByLatest(events).map((event) => (
                             <form key={event.id} className="event-grid-admin" onSubmit={handleUpdateEvent}>
                                 <input type="hidden" name="id" value={event.id} />
                                 <input type="text" className="form-input" name="event-name" defaultValue={event.name} placeholder="Event Name" required />

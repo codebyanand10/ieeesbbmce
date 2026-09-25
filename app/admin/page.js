@@ -16,7 +16,11 @@ export default async function AdminPage() {
 
     try {
         const [eventsRes, facultyRes, studentRes] = await Promise.all([
-            supabase.from("events").select("*").order("id", { ascending: false }),
+            supabase
+                .from("events")
+                .select("*")
+                .order("date", { ascending: false, nullsFirst: false })
+                .order("id", { ascending: false }),
             supabase.from("faculty_execom").select("*").order("id", { ascending: true }),
             supabase.from("student_execom").select("*").order("id", { ascending: true }),
         ]);
