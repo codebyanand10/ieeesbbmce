@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
     loginAdmin,
     addEvent,
@@ -15,8 +16,10 @@ import {
 } from "./actions";
 
 export default function AdminClient({ initialEvents, initialFaculty, initialStudents }) {
+    const router = useRouter();
     const [isAuth, setIsAuth] = useState(false);
     const [authError, setAuthError] = useState("");
+    const [feedback, setFeedback] = useState({ message: "", type: "" });
     const [tabIndex, setTabIndex] = useState(0);
 
     const [events, setEvents] = useState(initialEvents || []);
@@ -24,8 +27,41 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
     const [studentList, setStudentList] = useState(initialStudents || []);
 
     const [eventImgPreview, setEventImgPreview] = useState("");
+    const [facImgPreview, setFacImgPreview] = useState("");
     const [studentImgPreview, setStudentImgPreview] = useState("");
     const [loading, setLoading] = useState(false);
+
+    // Keep state in sync with server props
+    useEffect(() => {
+        if (initialEvents) setEvents(initialEvents);
+    }, [initialEvents]);
+
+    useEffect(() => {
+        if (initialFaculty) setFacultyList(initialFaculty);
+    }, [initialFaculty]);
+
+    useEffect(() => {
+        if (initialStudents) setStudentList(initialStudents);
+    }, [initialStudents]);
+
+    // Restore authentication state from localStorage
+    useEffect(() => {
+        try {
+            const savedAuth = localStorage.getItem("ieee_admin_auth");
+            if (savedAuth === "true") {
+                setIsAuth(true);
+            }
+        } catch (e) {
+            console.error("Storage access error:", e);
+        }
+    }, []);
+
+    const showNotification = (message, type = "success") => {
+        setFeedback({ message, type });
+        setTimeout(() => {
+            setFeedback({ message: "", type: "" });
+        }, 4000);
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -36,87 +72,185 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
         setLoading(false);
         if (res.auth) {
             setIsAuth(true);
+            try {
+                localStorage.setItem("ieee_admin_auth", "true");
+            } catch (err) {
+                console.error("Storage error:", err);
+            }
         } else {
             setAuthError(res.error || "Invalid username or password");
         }
     };
 
+    const handleLogout = () => {
+        try {
+            localStorage.removeItem("ieee_admin_auth");
+        } catch (err) {
+            console.error("Storage error:", err);
+        }
+        setIsAuth(false);
+    };
+
     const handleAddEvent = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const formData = new FormData(e.currentTarget);
-        await addEvent(formData);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        const res = await addEvent(formData);
         setLoading(false);
-        window.location.reload();
+
+        if (res.success) {
+            if (res.data) {
+                setEvents((prev) => [res.data, ...prev.filter((item) => item.id !== res.data.id)]);
+            }
+            form.reset();
+            setEventImgPreview("");
+            showNotification("Event added successfully! Displayed at the top.");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to add event.", "error");
+        }
     };
 
     const handleUpdateEvent = async (e) => {
         e.preventDefault();
         setLoading(true);
         const formData = new FormData(e.currentTarget);
-        await updateEvent(formData);
+        const res = await updateEvent(formData);
         setLoading(false);
-        window.location.reload();
+
+        if (res.success) {
+            if (res.data) {
+                setEvents((prev) => prev.map((ev) => (ev.id === res.data.id ? res.data : ev)));
+            }
+            showNotification("Event updated successfully!");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to update event.", "error");
+        }
     };
 
     const handleDeleteEvent = async (id) => {
         if (!confirm("Are you sure you want to delete this event?")) return;
         setLoading(true);
-        await deleteEvent(id);
+        const res = await deleteEvent(id);
         setLoading(false);
-        setEvents((prev) => prev.filter((ev) => ev.id !== id));
+
+        if (res.success) {
+            setEvents((prev) => prev.filter((ev) => ev.id !== id));
+            showNotification("Event deleted successfully!");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to delete event.", "error");
+        }
     };
 
     const handleAddFac = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const formData = new FormData(e.currentTarget);
-        await addFacExecom(formData);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        const res = await addFacExecom(formData);
         setLoading(false);
-        window.location.reload();
+
+        if (res.success) {
+            if (res.data) {
+                setFacultyList((prev) => [...prev, res.data]);
+            }
+            form.reset();
+            setFacImgPreview("");
+            showNotification("Faculty member added successfully!");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to add faculty member.", "error");
+        }
     };
 
     const handleUpdateFac = async (e) => {
         e.preventDefault();
         setLoading(true);
         const formData = new FormData(e.currentTarget);
-        await updateFacExecom(formData);
+        const res = await updateFacExecom(formData);
         setLoading(false);
-        window.location.reload();
+
+        if (res.success) {
+            if (res.data) {
+                setFacultyList((prev) => prev.map((f) => (f.id === res.data.id ? res.data : f)));
+            }
+            showNotification("Faculty member updated successfully!");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to update faculty member.", "error");
+        }
     };
 
     const handleDeleteFac = async (id) => {
         if (!confirm("Are you sure you want to delete this faculty member?")) return;
         setLoading(true);
-        await deleteFacExecom(id);
+        const res = await deleteFacExecom(id);
         setLoading(false);
-        setFacultyList((prev) => prev.filter((f) => f.id !== id));
+
+        if (res.success) {
+            setFacultyList((prev) => prev.filter((f) => f.id !== id));
+            showNotification("Faculty member deleted successfully!");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to delete faculty member.", "error");
+        }
     };
 
     const handleAddStd = async (e) => {
         e.preventDefault();
         setLoading(true);
-        const formData = new FormData(e.currentTarget);
-        await addStdExecom(formData);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
+        const res = await addStdExecom(formData);
         setLoading(false);
-        window.location.reload();
+
+        if (res.success) {
+            if (res.data) {
+                setStudentList((prev) => [...prev, res.data]);
+            }
+            form.reset();
+            setStudentImgPreview("");
+            showNotification("Student member added successfully!");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to add student member.", "error");
+        }
     };
 
     const handleUpdateStd = async (e) => {
         e.preventDefault();
         setLoading(true);
         const formData = new FormData(e.currentTarget);
-        await updateStdExecom(formData);
+        const res = await updateStdExecom(formData);
         setLoading(false);
-        window.location.reload();
+
+        if (res.success) {
+            if (res.data) {
+                setStudentList((prev) => prev.map((s) => (s.id === res.data.id ? res.data : s)));
+            }
+            showNotification("Student member updated successfully!");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to update student member.", "error");
+        }
     };
 
     const handleDeleteStd = async (id) => {
         if (!confirm("Are you sure you want to delete this student execom member?")) return;
         setLoading(true);
-        await deleteStdExecom(id);
+        const res = await deleteStdExecom(id);
         setLoading(false);
-        setStudentList((prev) => prev.filter((s) => s.id !== id));
+
+        if (res.success) {
+            setStudentList((prev) => prev.filter((s) => s.id !== id));
+            showNotification("Student member deleted successfully!");
+            router.refresh();
+        } else {
+            showNotification(res.error || "Failed to delete student member.", "error");
+        }
     };
 
     const getImgSrc = (img, fallback) => {
@@ -225,22 +359,33 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
 
     return (
         <div className="main">
-            <div className="tabbar">
-                <button
-                    className="tabbar-button"
-                    style={{ backgroundColor: tabIndex === 0 ? "#01267f99" : "transparent" }}
-                    onClick={() => setTabIndex(0)}
-                >
-                    Events
-                </button>
-                <button
-                    className="tabbar-button"
-                    style={{ backgroundColor: tabIndex === 1 ? "#01267f99" : "transparent" }}
-                    onClick={() => setTabIndex(1)}
-                >
-                    Execom
+            <div className="admin-header-actions">
+                <div className="tabbar">
+                    <button
+                        className="tabbar-button"
+                        style={{ backgroundColor: tabIndex === 0 ? "#01267f99" : "transparent" }}
+                        onClick={() => setTabIndex(0)}
+                    >
+                        Events
+                    </button>
+                    <button
+                        className="tabbar-button"
+                        style={{ backgroundColor: tabIndex === 1 ? "#01267f99" : "transparent" }}
+                        onClick={() => setTabIndex(1)}
+                    >
+                        Execom
+                    </button>
+                </div>
+                <button className="logout-button" onClick={handleLogout} title="Log out of Admin Dashboard">
+                    Sign Out
                 </button>
             </div>
+
+            {feedback.message && (
+                <div className={`toast-notification ${feedback.type === "error" ? "toast-error" : "toast-success"}`}>
+                    {feedback.message}
+                </div>
+            )}
 
             {tabIndex === 0 && (
                 <div className="admin-section">
@@ -276,7 +421,7 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
                         </div>
 
                         <button className="btn-apply" type="submit" disabled={loading}>
-                            {loading ? "Adding..." : "Add Event"}
+                            {loading ? "Adding Event..." : "+ Add Event"}
                         </button>
                     </form>
 
@@ -320,8 +465,22 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
                             <h2>Add Faculty Member</h2>
                             <input type="text" className="form-input" name="name" placeholder="Faculty Name" required />
                             <input type="text" className="form-input" name="role" placeholder="Faculty Role" required />
-                            <input type="file" name="image" accept="image/*" />
-                            <button className="btn-apply" type="submit" disabled={loading}>Add</button>
+                            <div className="img-picker-wrap">
+                                <img className="preview-img" src={facImgPreview || "/assets/avatar.webp"} alt="Preview" />
+                                <input
+                                    type="file"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files?.[0]) {
+                                            setFacImgPreview(URL.createObjectURL(e.target.files[0]));
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <button className="btn-apply" type="submit" disabled={loading}>
+                                {loading ? "Adding..." : "+ Add Faculty"}
+                            </button>
                         </form>
 
                         {facultyList.map((fac) => (
@@ -350,8 +509,22 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
                             <input type="text" className="form-input" name="linkedin" placeholder="LinkedIn (URL or handle)" />
                             <input type="email" className="form-input" name="email" placeholder="Email Address" />
                             <input type="tel" className="form-input" name="phone" placeholder="Phone Number" />
-                            <input type="file" name="image" accept="image/*" />
-                            <button className="btn-apply" type="submit" disabled={loading}>Add</button>
+                            <div className="img-picker-wrap">
+                                <img className="preview-img" src={studentImgPreview || "/assets/avatar.webp"} alt="Preview" />
+                                <input
+                                    type="file"
+                                    name="image"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files?.[0]) {
+                                            setStudentImgPreview(URL.createObjectURL(e.target.files[0]));
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <button className="btn-apply" type="submit" disabled={loading}>
+                                {loading ? "Adding..." : "+ Add Student"}
+                            </button>
                         </form>
 
                         {studentList.map((std) => (
@@ -377,11 +550,60 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
             )}
 
             <style jsx>{`
+                .admin-header-actions {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    position: relative;
+                    max-width: 1200px;
+                    margin: 24px auto;
+                    width: 90%;
+                }
                 .tabbar {
                     display: flex;
                     justify-content: center;
                     gap: 16px;
-                    margin: 24px auto;
+                }
+                .logout-button {
+                    position: absolute;
+                    right: 0;
+                    background: rgba(239, 68, 68, 0.15);
+                    color: #fca5a5;
+                    border: 1px solid rgba(239, 68, 68, 0.4);
+                    border-radius: 9999px;
+                    padding: 8px 18px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .logout-button:hover {
+                    background: rgba(239, 68, 68, 0.3);
+                    color: white;
+                    border-color: #ef4444;
+                }
+                .toast-notification {
+                    max-width: 600px;
+                    margin: 0 auto 20px auto;
+                    padding: 12px 20px;
+                    border-radius: 12px;
+                    text-align: center;
+                    font-weight: 600;
+                    animation: fadeIn 0.3s ease;
+                }
+                .toast-success {
+                    background: rgba(34, 197, 94, 0.2);
+                    border: 1px solid rgba(34, 197, 94, 0.5);
+                    color: #86efac;
+                }
+                .toast-error {
+                    background: rgba(239, 68, 68, 0.2);
+                    border: 1px solid rgba(239, 68, 68, 0.5);
+                    color: #fca5a5;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-8px); }
+                    to { opacity: 1; transform: translateY(0); }
                 }
                 .tabbar-button {
                     font-family: 'Open Sans', sans-serif;
@@ -500,6 +722,15 @@ export default function AdminClient({ initialEvents, initialFaculty, initialStud
                     display: grid;
                     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
                     gap: 24px;
+                }
+                @media (max-width: 600px) {
+                    .admin-header-actions {
+                        flex-direction: column;
+                        gap: 16px;
+                    }
+                    .logout-button {
+                        position: static;
+                    }
                 }
             `}</style>
         </div>

@@ -6,6 +6,7 @@ export const metadata = {
 };
 
 export const revalidate = 0; // Fresh events on request
+export const dynamic = "force-dynamic";
 
 function getDateString(date) {
     if (!date) return "TBA";
